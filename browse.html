@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather and News Update</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .section {
+            width: 45%;
+        }
+        .section h2 {
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="section" id="weather">
+            <h2>Weather Updates</h2>
+            <div id="weather-info">Loading...</div>
+        </div>
+        <div class="section" id="news">
+            <h2>Latest News</h2>
+            <div id="news-info">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        const city = 'YourCityName'; // Replace with your city name
+        const weatherApiKey = 'YourWeatherAPIKey'; // Replace with your weather API key
+        const newsApiKey = 'YourNewsAPIKey'; // Replace with your news API key
+
+        async function fetchWeather() {
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${weatherApiKey}`);
+            const data = await response.json();
+            document.getElementById('weather-info').innerText = `Temperature: ${data.main.temp}°C\nWeather: ${data.weather[0].description}`;
+        }
+
+        async function fetchNews() {
+            const response = await fetch(`https://newsapi.org/v2/top-headlines?country=us&apiKey=${newsApiKey}`);
+            const data = await response.json();
+            const newsInfo = data.articles.map(article => `<p>${article.title}</p>`).join('');
+            document.getElementById('news-info').innerHTML = newsInfo;
+        }
+
+        fetchWeather();
+        fetchNews();
+
+        setInterval(fetchWeather, 60000); // Update weather every 60 seconds
+        setInterval(fetchNews, 60000); // Update news every 60 seconds
+    </script>
+</body>
+</html>
